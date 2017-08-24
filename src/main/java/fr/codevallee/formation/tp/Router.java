@@ -11,9 +11,12 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import fr.codevallee.formation.tp.modele.Demo;
+import fr.codevallee.formation.tp.modele.Utilisateur;
+import fr.codevallee.formation.tp.modele.UtilisateurDao;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
 import spark.ModelAndView;
+import spark.Spark;
 import spark.servlet.SparkApplication;
 import spark.template.freemarker.FreeMarkerEngine;
 
@@ -22,35 +25,133 @@ import org.slf4j.LoggerFactory;
 
 public class Router implements SparkApplication {
 
+	private UtilisateurDao monUtilisateur;
+	private Utilisateur newUtilisateur;
 	public void init() {
-
+		
+		Spark.staticFileLocation("/public");
 		final Logger logger = LoggerFactory.getLogger(Router.class);
 
-		
-		get("/exemple1", (request, response) -> {
-
+		get("/", (request, response) -> {
 			logger.debug("start");
-
 			Map<String, Object> attributes = new HashMap<>();
-
-			// Exemple 1 (à déplacer dans une classe statique !):
-			EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("formation");
-			EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-			// J'ajoute un métier :
-			Demo metier = new Demo();
-			metier.setNom("exemple1");
-
-			entityManager.getTransaction().begin();
-			entityManager.persist(metier);
-			entityManager.getTransaction().commit();
-			entityManager.close();
+			monUtilisateur = new UtilisateurDao();	
+			newUtilisateur =new Utilisateur();
+			return new ModelAndView(attributes, "menu.ftl");
 			
-			entityManager = entityManagerFactory.createEntityManager();
-			TypedQuery<Demo> query = entityManager.createQuery("from Demo", Demo.class);
-			attributes.put("objets", query.getResultList());
-			entityManager.close();
-			return new ModelAndView(attributes, "home.ftl");
+		}, getFreeMarkerEngine());
+		
+		get("/creationUtilisateur", (request, response) -> {
+			logger.debug("start");
+			Map<String, Object> attributes = new HashMap<>();
+			return new ModelAndView(attributes, "creationUtilisateur.ftl");
+		}, getFreeMarkerEngine());
+
+		get("/affichageUtilisateur", (request, response) -> {
+			logger.debug("start");
+			String nom = request.queryParams("nomUtilisateur") != null ? request.queryParams("nomUtilisateur") : "anonymous";
+            String prenom = request.queryParams("prenomUtilisateur") != null ? request.queryParams("prenomUtilisateur") : "unknown";
+            String adresse = request.queryParams("adresseUtilisateur") != null ? request.queryParams("adresseUtilisateur") : "anonymous";
+            String telephone = request.queryParams("telephoneUtilisateur") != null ? request.queryParams("telephoneUtilisateur") : "anonymous";
+            String email = request.queryParams("emailUtilisateur") != null ? request.queryParams("emailUtilisateur") : "anonymous";
+            Map<String, Object> attributes = new HashMap<>();
+			attributes.put("nomUtilisateur", nom);
+			attributes.put("prenomUtilisateur", prenom);
+			attributes.put("adresseUtilisateur", adresse);
+			attributes.put("telephoneUtilisateur", telephone);
+			attributes.put("emailUtilisateur", email);
+			monUtilisateur = new UtilisateurDao();	
+			newUtilisateur =new Utilisateur();
+			newUtilisateur.setAdresse(adresse);
+			newUtilisateur.setEmail(email);
+			newUtilisateur.setNom(nom);
+			newUtilisateur.setPrenom(prenom);
+			newUtilisateur.setTelephone(telephone);	
+			monUtilisateur.create(newUtilisateur);
+			attributes.put("utilisateur", newUtilisateur);
+			return new ModelAndView(attributes, "affichageUtilisateur2.ftl");
+		}, getFreeMarkerEngine());
+
+		get("/chercherUtilisateur", (request, response) -> {
+			logger.debug("start");
+			Map<String, Object> attributes = new HashMap<>();
+			return new ModelAndView(attributes, "chercherUtilisateur.ftl");
+		}, getFreeMarkerEngine());
+
+		get("/chercher", (request, response) -> {
+			logger.debug("start");
+			String email = request.queryParams("emailUtilisateur") != null ? request.queryParams("emailUtilisateur") : "anonymous";
+			Map<String, Object> attributes = new HashMap<>();
+			attributes.put("emailUtilisateur", email);
+			UtilisateurDao monUtilisateur = new UtilisateurDao();		
+			monUtilisateur.read(email);
+			Utilisateur newUtilisateur = new Utilisateur();
+			newUtilisateur = monUtilisateur.read(email);
+			System.out.println(newUtilisateur);
+			attributes.put("nomUtilisateur", newUtilisateur.getNom());
+			attributes.put("prenomUtilisateur", newUtilisateur.getPrenom());
+			attributes.put("adresseUtilisateur", newUtilisateur.getAdresse());
+			attributes.put("telephoneUtilisateur", newUtilisateur.getTelephone());
+			attributes.put("emailUtilisateur", newUtilisateur.getEmail());
+			attributes.put("utilisateur", newUtilisateur);
+			return new ModelAndView(attributes, "affichageUtilisateur2.ftl");
+		}, getFreeMarkerEngine());
+		
+		get("/modifierUtilisateur", (request, response) -> {
+			logger.debug("start");
+			Map<String, Object> attributes = new HashMap<>();
+			return new ModelAndView(attributes, "modifierUtilisateur.ftl");
+		}, getFreeMarkerEngine());
+		
+		get("/modification", (request, response) -> {
+			logger.debug("start");
+			String nom = request.queryParams("nomUtilisateur") != null ? request.queryParams("nomUtilisateur") : "anonymous";
+            String prenom = request.queryParams("prenomUtilisateur") != null ? request.queryParams("prenomUtilisateur") : "unknown";
+            String adresse = request.queryParams("adresseUtilisateur") != null ? request.queryParams("adresseUtilisateur") : "anonymous";
+            String telephone = request.queryParams("telephoneUtilisateur") != null ? request.queryParams("telephoneUtilisateur") : "anonymous";
+            String email = request.queryParams("emailUtilisateur") != null ? request.queryParams("emailUtilisateur") : "anonymous";
+			Map<String, Object> attributes = new HashMap<>();
+			attributes.put("nomUtilisateur", nom);
+			attributes.put("prenomUtilisateur", prenom);
+			attributes.put("adresseUtilisateur", adresse);
+			attributes.put("telephoneUtilisateur", telephone);
+			attributes.put("emailUtilisateur", email);
+			monUtilisateur = new UtilisateurDao();	
+			newUtilisateur =new Utilisateur();
+			newUtilisateur.setAdresse(adresse);
+			newUtilisateur.setEmail(email);
+			newUtilisateur.setNom(nom);
+			newUtilisateur.setPrenom(prenom);
+			newUtilisateur.setTelephone(telephone);
+//			UtilisateurDao monUtilisateur = new UtilisateurDao();		
+			monUtilisateur.update(newUtilisateur);
+			attributes.put("utilisateur", newUtilisateur);
+			return new ModelAndView(attributes, "affichageUtilisateur2.ftl");
+		}, getFreeMarkerEngine());
+		
+		get("/supprimerUtilisateur", (request, response) -> {
+			logger.debug("start");
+			Map<String, Object> attributes = new HashMap<>();
+			return new ModelAndView(attributes, "supprimerUtilisateur.ftl");
+		}, getFreeMarkerEngine());
+		
+		get("/suppression", (request, response) -> {
+			logger.debug("start");
+			String email = request.queryParams("emailUtilisateur") != null ? request.queryParams("emailUtilisateur") : "anonymous";
+			Map<String, Object> attributes = new HashMap<>();
+			attributes.put("emailUtilisateur", email);
+			UtilisateurDao monUtilisateur = new UtilisateurDao();
+			
+			Utilisateur newUtilisateur = monUtilisateur.read(email);;
+			monUtilisateur.delete(newUtilisateur);
+			
+			attributes.put("nomUtilisateur", newUtilisateur.getNom());
+			attributes.put("prenomUtilisateur", newUtilisateur.getPrenom());
+			attributes.put("adresseUtilisateur", newUtilisateur.getAdresse());
+			attributes.put("telephoneUtilisateur", newUtilisateur.getTelephone());
+			attributes.put("emailUtilisateur", newUtilisateur.getEmail());
+			attributes.put("utilisateur", newUtilisateur);
+			return new ModelAndView(attributes, "menu.ftl");
 		}, getFreeMarkerEngine());
 
 	}
@@ -65,3 +166,13 @@ public class Router implements SparkApplication {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
