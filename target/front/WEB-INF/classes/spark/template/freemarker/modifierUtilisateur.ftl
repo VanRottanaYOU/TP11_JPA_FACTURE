@@ -6,7 +6,7 @@
     </head>
     <body>
         <div>
-            <form method="get" action="/modification">
+            <form method="post" action="/modification">
                 <fieldset>
                     <legend>Informations utilisateur</legend>
     

@@ -25,8 +25,13 @@ public class UtilisateurDao {
 	    return person;
 	  }
 	  public Utilisateur update(Utilisateur person) {
-		  entityManager.getTransaction().begin();
-	    person = entityManager.merge(person);
+		entityManager.getTransaction().begin();
+		Utilisateur existingPerson = entityManager.find(Utilisateur.class, person.getEmail());
+//	    person = entityManager.merge(person);
+		existingPerson.setAdresse(person.getAdresse());
+		existingPerson.setNom(person.getNom());
+		existingPerson.setPrenom(person.getPrenom());
+		existingPerson.setTelephone(person.getTelephone());
 	    entityManager.getTransaction().commit();
 	    return person;
 	  }

@@ -7,7 +7,7 @@
     <body>
 
         <div>
-            <form method=get" action="/suppression">
+            <form method="post" action="/suppression">
                 <fieldset>
                     <legend>Suppression de l'utilisateur</legend>
 					<label for="emailUtilisateur">Code<span class="requis">*</span></label>

@@ -6,7 +6,7 @@
     </head>
     <body>
         <div>
-            <form method="get" action="/affichageUtilisateur">
+            <form method="post" action="/affichageUtilisateur">
                 <fieldset>
                     <legend>Informations utilisateur</legend>
     

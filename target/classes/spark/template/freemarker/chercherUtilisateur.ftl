@@ -7,7 +7,7 @@
     <body>
 
         <div>
-            <form method="get" action="/chercher">
+            <form method="post" action="/chercher">
                 <fieldset>
                     <legend>Recherche de l'utilisateur</legend>
 					<label for="emailUtilisateur">Email :<span class="requis">*</span></label>
