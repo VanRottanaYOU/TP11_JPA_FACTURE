@@ -7,10 +7,10 @@
     <body>
 
         <div>
-            <form method="post" action="/affichageFacture">
+            <form method="post" action="/affichagePaiementFacture">
                 <fieldset>
                     <legend>Paiement de la facture</legend>
-					<label for="idFacture">Email :<span class="requis">*</span></label>
+					<label for="idFacture">Numéro facture :<span class="requis">*</span></label>
                     <input type="text" id="idFacture" name="idFacture" value="" size="20" maxlength="20" />
                     <br />                                                             
                 </fieldset>

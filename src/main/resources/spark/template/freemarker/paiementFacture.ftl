@@ -7,7 +7,7 @@
     <body>
 
         <div>
-            <form method="post" action="/affichageFacture">
+            <form method="post" action="/affichagePaiementFacture">
                 <fieldset>
                     <legend>Paiement de la facture</legend>
 					<label for="idFacture">Numéro facture :<span class="requis">*</span></label>

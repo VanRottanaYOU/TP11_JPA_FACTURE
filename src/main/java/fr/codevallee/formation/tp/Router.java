@@ -214,12 +214,8 @@ public class Router implements SparkApplication {
 				String idClient = request.queryParams("idClient") != null ? request.queryParams("idClient") : "anonymous";
 			    String idArticle = request.queryParams("idArticle") != null ? request.queryParams("idArticle") : "unknown";
 			    String quantiteArticle = request.queryParams("quantiteArticle") != null ? request.queryParams("quantiteArticle") : "anonymous";
-
 			    Map<String, Object> attributes = new HashMap<>();
 			    
-
-				
-
 				try {
 					System.out.println("creationFacture");	
 					Article article1 = new Article();
@@ -234,32 +230,20 @@ public class Router implements SparkApplication {
 					System.out.println("client 3:"+client);
 					
 					maFacture.setClient(client);
-//					maFacture.setDate(new java.util.Date());
+					maFacture.setDate(new java.util.Date());
 //					Date maintenant = (Date) new java.util.Date(); 
 //					DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 //					String reportDate = df.format(maintenant);
 //					attributes.put("reportDate", reportDate);
 					maFacture.setStatus("Non payée");
 					maFacture.addLigneFacture(maLigneFacture);
+					maFacture.setTotal(maFacture.getTotalTTC());
 					maFactureDao.create(maFacture);
 					System.out.println("maFacture finale : " + maFacture);
-//					Article article2 = new Article();
-//					article2 = monArticleDao.read(2);
-//					System.out.println("article2 : " + article2);
-//					maLigneFacture = new LigneFacture();
-//					maLigneFacture.setArticle(article2);
-//					maLigneFacture.setQuantiteArticles(3);
 					
 					attributes.put("facture", maFacture);
 					return new ModelAndView(attributes, "affichageFacture.ftl");
 				} catch (PersistenceException e) {
-//					System.out.println(e.printStackTrace());
-//					System.out.println(e.toString());
-//					attributes.put("erreur", e.getMessage());
-//					attributes.put("erreur", e.fillInStackTrace());
-//					attributes.put("erreur", e.getCause());
-//					attributes.put("erreur", e.getLocalizedMessage());
-//					attributes.put("erreur", e.getStackTrace());
 					attributes.put("erreur", "erreur");					
 					return new ModelAndView(attributes, "home.ftl");
 				}finally {
@@ -272,24 +256,59 @@ public class Router implements SparkApplication {
 			Map<String, Object> attributes = new HashMap<>();
 		
 			try {
-				Collection<Client> monSetClient = new HashSet<Client>();
-				System.out.println("monSetClient 1: " + monSetClient);
-				monSetClient = monClientDao.listerClients();
-				System.out.println("monSetClient 2: " + monSetClient);
-				attributes.put("monSetClient", monSetClient);
-				return new ModelAndView(attributes, "affichagelisteClients.ftl");
+				Collection<Facture> monSetFacture = new HashSet<Facture>();
+				System.out.println("monSetFacture 1: " + monSetFacture);
+				monSetFacture = maFactureDao.listerFactures();
+				System.out.println("monSetFacture 2: " + monSetFacture);
+				attributes.put("monSetFacture", monSetFacture);
+				return new ModelAndView(attributes, "affichagelisteFactures.ftl");
 			}catch (Exception e) {
-				attributes.put("erreur", "clients non présent en base");					
+				attributes.put("erreur", "Factures non présentes en base");					
 				return new ModelAndView(attributes, "home.ftl");
 			}
 		}, new FreeMarkerEngine());
-						
+		
+		get("/listerFactures2", (request, response) -> {
+//			logger.debug("start");
+			Map<String, Object> attributes = new HashMap<>();
+		
+			try {
+				Collection<Facture> monSetFacture = new HashSet<Facture>();
+				System.out.println("monSetFacture 1: " + monSetFacture);
+				monSetFacture = maFactureDao.listerFacturesImpayees();
+				System.out.println("monSetFacture 2: " + monSetFacture);
+				attributes.put("monSetFacture", monSetFacture);
+				return new ModelAndView(attributes, "affichagelisteFactures.ftl");
+			}catch (Exception e) {
+				attributes.put("erreur", "Factures non présentes en base");					
+				return new ModelAndView(attributes, "home.ftl");
+			}
+		}, new FreeMarkerEngine());
+		
+		get("/listerFactures3", (request, response) -> {
+//			logger.debug("start");
+			Map<String, Object> attributes = new HashMap<>();
+		
+			try {
+				Collection<Facture> monSetFacture = new HashSet<Facture>();
+				System.out.println("monSetFacture 1: " + monSetFacture);
+				monSetFacture = maFactureDao.listerFacturesMontant(500.00);
+				System.out.println("monSetFacture 2: " + monSetFacture);
+				attributes.put("monSetFacture", monSetFacture);
+				return new ModelAndView(attributes, "affichagelisteFactures.ftl");
+			}catch (Exception e) {
+				attributes.put("erreur", "Factures non présentes en base");					
+				return new ModelAndView(attributes, "home.ftl");
+			}
+		}, new FreeMarkerEngine());
+		
+		
 		get("/paiementFacture", (request, response) -> {
 			Map<String, Object> attributes = new HashMap<>();
 			return new ModelAndView(attributes, "paiementFacture.ftl");
 		}, new FreeMarkerEngine());
 
-			post("/affichageFacture", (request, response) -> {
+			post("/affichagePaiementFacture", (request, response) -> {
 				String idFacture = request.queryParams("idFacture") != null ? request.queryParams("idFacture") : "anonymous";			   
 				Map<String, Object> attributes = new HashMap<>();
 				try {
@@ -298,12 +317,34 @@ public class Router implements SparkApplication {
 					facture = maFactureDao.read(Long.parseLong(idFacture));
 //					facture.setStatus("Payée");
 					maFactureDao.update(facture);
+					attributes.put("facture",facture);
 					return new ModelAndView(attributes, "affichageFacture.ftl");
 				} catch (PersistenceException e) {
 					attributes.put("erreur", "utilisateur déjà présent en base");					
 					return new ModelAndView(attributes, "home.ftl");
 				}
 			}, new FreeMarkerEngine());
+			
+		get("/supprimerFacture", (request, response) -> {
+				Map<String, Object> attributes = new HashMap<>();
+				return new ModelAndView(attributes, "supprimerFacture.ftl");
+			}, new FreeMarkerEngine());
+
+				post("/suppressionFacture", (request, response) -> {
+					String idFacture = request.queryParams("idFacture") != null ? request.queryParams("idFacture") : "anonymous";			   
+					Map<String, Object> attributes = new HashMap<>();
+					try {
+						System.out.println("paimentFacture");	
+						Facture facture = new Facture();
+						facture = maFactureDao.read(Long.parseLong(idFacture));
+						maFactureDao.delete(facture);
+						attributes.put("facture",facture);					
+						return new ModelAndView(attributes, "suppressionFacture.ftl");
+					} catch (PersistenceException e) {
+						attributes.put("erreur", "facture absente en base");					
+						return new ModelAndView(attributes, "home.ftl");
+					}
+		}, new FreeMarkerEngine());
 		
 	}
 

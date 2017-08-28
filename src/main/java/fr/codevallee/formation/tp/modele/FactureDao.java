@@ -31,11 +31,27 @@ public class FactureDao {
 	    return (Collection<Facture>) query.getResultList();
 	  }
 	  
+	  public Collection<Facture> listerFacturesImpayees() {
+		  System.out.println("query 1: ");
+		  Query query = entityManager.createQuery("SELECT e FROM Facture e where e.status = :Status"); 
+		  query.setParameter("Status", "Non payée");
+		  System.out.println("query 2: " + query);
+	    return (Collection<Facture>) query.getResultList();
+	  }
+	  
+	  public Collection<Facture> listerFacturesMontant(Double montant) {
+		  System.out.println("query 1: ");
+		  Query query = entityManager.createQuery("SELECT e FROM Facture e where e.total > :Montant"); 
+		  query.setParameter("Montant", montant);
+		  System.out.println("query 2: " + query);
+	    return (Collection<Facture>) query.getResultList();
+	  }
+	  	  
 	  public Facture read(long idFacture) {
 		  System.out.println("query 3: ");
-		  System.out.println("idArticle 3: "+idFacture);
-		  Query query = entityManager.createQuery("SELECT e FROM Facture e where e.IdArticle = :idFacture");
-		  query.setParameter("idFacture", idFacture);
+		  System.out.println("idFacture 3: "+idFacture);
+		  Query query = entityManager.createQuery("SELECT e FROM Facture e where e.idFacture = :IdFacture");
+		  query.setParameter("IdFacture", idFacture);
 		  System.out.println("query 4: " + query);
 		  Facture maFacture = new Facture();
 		  maFacture = (Facture)query.getSingleResult();
@@ -57,6 +73,13 @@ public class FactureDao {
 		existingFacture.setStatus("Payée");
 	    entityManager.getTransaction().commit();
 	    return existingFacture;
+	  }
+	  
+	  public Facture delete(Facture facture) {
+		  entityManager.getTransaction().begin();
+		  entityManager.remove(facture);
+		  entityManager.getTransaction().commit();
+	    return facture;
 	  }
 	  
 	  public void close() {
