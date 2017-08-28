@@ -1,5 +1,13 @@
-C:\sql_tp4_CRUD\src\main\java\fr\codevallee\formation\tp\CreerUtilisateur.java
-C:\sql_tp4_CRUD\src\main\java\fr\codevallee\formation\tp\modele\Demo.java
-C:\sql_tp4_CRUD\src\main\java\fr\codevallee\formation\tp\Router.java
-C:\sql_tp4_CRUD\src\main\java\fr\codevallee\formation\tp\modele\Utilisateur.java
-C:\sql_tp4_CRUD\src\main\java\fr\codevallee\formation\tp\modele\UtilisateurDao.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\Facture.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\FactureDao.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\Router.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\ArticleDao.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\LigneFacture.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\Client.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\ClientDao.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\DescriptionDao.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\Article.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\Adresse.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\AdresseDao.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\DescriptionArticle.java
+C:\Spring workspace\tp4-1.0-SNAPSHOT2\src\main\java\fr\codevallee\formation\tp\modele\LigneFactureDao.java
